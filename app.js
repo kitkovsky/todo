@@ -24,10 +24,14 @@ function addTodo(event) {
 }
 function deleteAndCheck(event) {
     const item = event.target;
+    const targetTodo = item.parentElement;
     if (item.classList[0] === "trash-button") {
-        item.parentElement.remove();
+        targetTodo.classList.add("fall");
+        targetTodo.addEventListener("transitionend", () => {
+            targetTodo.remove();
+        });
     }
-    else {
-        item.parentElement.classList.toggle("completed");
+    else if (item.classList[0] === "complete-button") {
+        targetTodo.classList.toggle("completed");
     }
 }

@@ -30,11 +30,15 @@ function addTodo(event: { preventDefault: () => void }) {
   (<HTMLInputElement>todoInput).value = "";
 }
 
-function deleteAndCheck(event: { target: any; }): void {
+function deleteAndCheck(event: { target: any }): void {
   const item = event.target;
+  const targetTodo = item.parentElement;
   if (item.classList[0] === "trash-button") {
-    item.parentElement.remove();
-  } else {
-    item.parentElement.classList.toggle("completed");
+    targetTodo.classList.add("fall");
+    targetTodo.addEventListener("transitionend", () => {
+      targetTodo.remove();
+    });
+  } else if (item.classList[0] === "complete-button") {
+    targetTodo.classList.toggle("completed");
   }
 }
