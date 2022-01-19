@@ -1,17 +1,19 @@
-const todoInput = document.querySelector(".todo-input");
+const todoInput: HTMLInputElement = document.querySelector(".todo-input");
 const todoButton = document.querySelector(".todo-button");
 const todoList = document.querySelector(".todo-list");
+const filterOption = document.querySelector("#filter-todo");
 
 todoButton.addEventListener("click", addTodo);
 todoList.addEventListener("click", deleteAndCheck);
+filterOption.addEventListener("click", filterTodo);
 
-function addTodo(event: { preventDefault: () => void }) {
+function addTodo(event): void {
   event.preventDefault();
   const todoDiv = document.createElement("div");
   todoDiv.classList.add("todo");
 
   const newTodo = document.createElement("li");
-  newTodo.innerText = (<HTMLInputElement>todoInput).value;
+  newTodo.innerText = todoInput.value;
   newTodo.classList.add("todo-item");
   todoDiv.appendChild(newTodo);
 
@@ -27,10 +29,10 @@ function addTodo(event: { preventDefault: () => void }) {
 
   todoList.appendChild(todoDiv);
 
-  (<HTMLInputElement>todoInput).value = "";
+  todoInput.value = "";
 }
 
-function deleteAndCheck(event: { target: any }): void {
+function deleteAndCheck(event): void {
   const item = event.target;
   const targetTodo = item.parentElement;
   if (item.classList[0] === "trash-button") {
@@ -41,4 +43,25 @@ function deleteAndCheck(event: { target: any }): void {
   } else if (item.classList[0] === "complete-button") {
     targetTodo.classList.toggle("completed");
   }
+}
+
+function filterTodo(event): void {
+  const todos = todoList.childNodes;
+  todos.forEach((todo: HTMLElement) => {
+    switch (event.target.value) {
+      case "all":
+        todo.style.display = "flex";
+        break;
+      case "completed":
+        todo.classList.contains("completed")
+          ? (todo.style.display = "flex")
+          : (todo.style.display = "none");
+        break;
+      case "uncompleted":
+        !todo.classList.contains("completed")
+          ? (todo.style.display = "flex")
+          : (todo.style.display = "none");
+        break;
+    }
+  });
 }
