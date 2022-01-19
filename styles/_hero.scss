@@ -1,15 +1,5 @@
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-
-html {
-  font-size: 62.5%;
-}
-
 body {
-  background-image: linear-gradient(120deg, #d8b958, #fda085);
+  background-image: linear-gradient(120deg, $yellow, $orange);
   color: white;
   font-family: "Poppins", sans-serif;
   min-height: 100vh;
@@ -36,14 +26,13 @@ form button {
 }
 
 form button {
-  color: #fda085;
+  color: $orange;
   background: white;
   cursor: pointer;
   transition: all 0.3s ease;
-}
-form button:hover {
-  background: #fda085;
-  color: white;
-}
 
-/*# sourceMappingURL=style.css.map */
+  &:hover {
+    background: $orange;
+    color: white;
+  }
+}
