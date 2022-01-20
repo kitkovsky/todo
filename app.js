@@ -5,25 +5,31 @@ const filterOption = document.querySelector("#filter-todo");
 class Todo {
     value;
     id;
-    constructor(value, id) {
+    completed;
+    constructor(value, id, completed) {
         this.value = value;
         this.id = id;
+        this.completed = completed;
     }
 }
 todoButton.addEventListener("click", addTodo);
 todoList.addEventListener("click", deleteAndCheck);
 filterOption.addEventListener("change", filterTodo);
 document.addEventListener("DOMContentLoaded", createTodosFromLocal);
+document.addEventListener("DOMContentLoaded", filterTodo);
 function addTodo(event) {
     event.preventDefault();
     const uuid = Date.now().toString();
-    createTodo(todoInput.value, uuid);
+    createTodo(todoInput.value, uuid, false);
     saveLocalTodos(todoInput.value, uuid);
     todoInput.value = "";
 }
-function createTodo(value, uuid) {
+function createTodo(value, uuid, completed) {
     const todoDiv = document.createElement("div");
     todoDiv.classList.add(uuid, "todo");
+    if (completed) {
+        todoDiv.classList.add("completed");
+    }
     const newTodo = document.createElement("li");
     newTodo.innerText = value;
     newTodo.classList.add("todo-item");
@@ -50,12 +56,23 @@ function deleteAndCheck(event) {
     }
     else if (item.classList[0] === "complete-button") {
         targetTodo.classList.toggle("completed");
+        const id = targetTodo.classList[0];
+        let todos = getLocalTodos();
+        const index = todos.findIndex((todo) => todo.id === id);
+        todos[index].completed
+            ? (todos[index].completed = false)
+            : (todos[index].completed = true);
+        localStorage.setItem("todos", JSON.stringify(todos));
     }
 }
 function filterTodo(event) {
     const todos = todoList.childNodes;
+    let filter;
+    event.target.value === undefined
+        ? (filter = filterOption.value)
+        : (filter = event.target.value);
     todos.forEach((todo) => {
-        switch (event.target.value) {
+        switch (filter) {
             case "all":
                 todo.style.display = "flex";
                 break;
@@ -77,7 +94,7 @@ function saveLocalTodos(value, uuid) {
     if (localStorage.getItem("todos") !== null) {
         todos = JSON.parse(localStorage.getItem("todos"));
     }
-    const newTodo = new Todo(value, uuid);
+    const newTodo = new Todo(value, uuid, false);
     todos.push(newTodo);
     localStorage.setItem("todos", JSON.stringify(todos));
 }
@@ -91,7 +108,7 @@ function getLocalTodos() {
 function createTodosFromLocal() {
     const todos = getLocalTodos();
     todos.forEach((todo) => {
-        createTodo(todo.value, todo.id);
+        createTodo(todo.value, todo.id, todo.completed);
     });
 }
 function deleteTodoFromLocal(id) {
