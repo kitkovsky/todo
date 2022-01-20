@@ -25,6 +25,8 @@ function addTodo(event): void {
   event.preventDefault();
   const uuid = Date.now().toString();
   createTodo(todoInput.value, uuid, false);
+  // FIXME: when adding a new todo with filtering set on completed and submitting the form with enter, the new todo will still show up
+  filterTodo(event);
   saveLocalTodos(todoInput.value, uuid);
   todoInput.value = "";
 }
